@@ -1,0 +1,23 @@
+void loop()
+	{
+	unsigned long loopStartTime = millis();
+	if (digitalRead(buttonFireModePin) == HIGH)							//
+		fullAuto = true;												// setting state for
+	else																// firing mode
+		fullAuto = false;												//
+
+	if (digitalRead(buttonFirePin) == HIGH)								// shooting:
+		{
+		if (fullAuto)													// if full auto - just shoot
+			shoot();
+		else if (!shotFired) shoot();									// if semi auto - shoot if you didnt yet shoot since trigger pulled
+		} else
+		shotFired = false;												// if semi auto - set shotFire to false when releasing trigger
+
+// timed polling:
+	if (millis() - shotTime > 50) digitalWrite(ledMuzzleFlashPin, LOW);	// putting out muzzleFlash LED
+	if (millis() - redrawTime > 100) lcdRedraw();						// screen refresh 10 times per second
+
+	Serial.println(loopTime);											// serial debug: previous loop time of execution
+	loopTime = millis() - loopStartTime;
+	} 
